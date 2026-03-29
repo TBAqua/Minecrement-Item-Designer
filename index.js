@@ -60,46 +60,6 @@ const rarityMiniMessageColors = {
     SPECIAL: "<red>"
 };
 
-function exportItem() {
-    const stats = {};
-    const lore = [""]; // Start with an empty first line
-
-    const loreMap = {
-        fortune: { label: "Fortune", color: "<gold>" },
-        mining_speed: { label: "Mining Speed", color: "<gold>" },
-        pickaxe_power: { label: "Pickaxe Power", color: "<dark_purple>" },
-        xp_yield: { label: "XP Yield", color: "<aqua>" }
-    };
-
-    // Add stats first
-    for (let stat in statEditors) {
-        const val = Number(statEditors[stat].value);
-        if (val) {
-            stats[stat] = val;
-            const { label, color } = loreMap[stat];
-            lore.push(`<gray>${label}: ${color}+${val}`);
-        }
-    }
-
-    // Add a blank line before rarity + type
-    if (rarityEditor.value) lore.push("");
-
-    // Add rarity + type at the bottom
-    const rarityValue = rarityEditor.value;
-    const typeValue = typeEditor.value;
-    if (rarityValue) {
-        const colorTag = rarityMiniMessageColors[rarityValue] || "<white>";
-        lore.push(`${colorTag}${rarityValue} ${typeValue}`);
-    }
-
-    return {
-        item_type: materialEditor.value,
-        stats,
-        name: nameEditor.value,
-        lore
-    };
-}
-
 document.getElementById("export-button").addEventListener("click", async () => {
     try {
         const item = exportItem();
@@ -112,6 +72,43 @@ document.getElementById("export-button").addEventListener("click", async () => {
     }
 });
 
+function exportItem() {
+    const stats = {};
+    const lore = [""];
+
+    const loreMap = {
+        fortune: { label: "Fortune", color: "<gold>" },
+        mining_speed: { label: "Mining Speed", color: "<gold>" },
+        pickaxe_power: { label: "Pickaxe Power", color: "<dark_purple>" },
+        xp_yield: { label: "XP Yield", color: "<aqua>" }
+    };
+
+    for (let stat in statEditors) {
+        const val = Number(statEditors[stat].value);
+        if (val) {
+            stats[stat] = val;
+            const { label, color } = loreMap[stat];
+            lore.push(`<gray>${label}: ${color}+${val}`);
+        }
+    }
+
+    if (rarityEditor.value) lore.push("");
+
+    const rarityValue = rarityEditor.value || "COMMON";
+    const typeValue = typeEditor.value || "";
+    const colorTag = rarityMiniMessageColors[rarityValue] || "<white>";
+    lore.push(`${colorTag}${rarityValue} ${typeValue}`);
+
+    return {
+        item_type: materialEditor.value,
+        stats,
+        name: nameEditor.value,
+        rarity: rarityValue,
+        type: typeValue,
+        lore
+    };
+}
+
 document.getElementById("import-button").addEventListener("click", async () => {
     try {
         const text = await navigator.clipboard.readText();
@@ -122,17 +119,12 @@ document.getElementById("import-button").addEventListener("click", async () => {
 
         for (let stat in statEditors) {
             statEditors[stat].value = item.stats?.[stat] || "";
-            updateStat(stat); // Refresh display
+            updateStat(stat);
         }
 
-        const rarityLine = item.lore?.filter(l => l.trim() !== "")?.pop() || "";
-        const match = rarityLine.match(/<\w+>(\w+)\s+(\w+)/);
-        if (match) {
-            const [, rarity, type] = match;
-            rarityEditor.value = rarity;
-            typeEditor.value = type;
-            updateRarity();
-        }
+        rarityEditor.value = item.rarity || "COMMON";
+        typeEditor.value = item.type || "";
+        updateRarity();
 
         alert("✅ Item imported from clipboard!");
     } catch (err) {
