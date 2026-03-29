@@ -128,3 +128,31 @@ body::before {
 #display-rarity {
     font-family: 'Minecraft Bold', serif;
 }
+
+.export-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.export-button-container button {
+    background-color: rgba(255, 255, 255, 0.3);
+    outline: none;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    transition: 0.5s;
+}
+
+.export-button-container button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    scale: 1.2;
+    rotate: -3deg;
+}
+
+.export-button-container button:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    scale: 0.9;
+    rotate: -3deg;
+}

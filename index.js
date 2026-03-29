@@ -1,125 +1,93 @@
-let nameEditorObject = document.getElementById("editor-name");
-let nameDisplayObject = document.getElementById("display-name");
+// Elements
+const nameEditor = document.getElementById("editor-name"),
+    nameDisplay = document.getElementById("display-name"),
+    rarityEditor = document.getElementById("editor-rarity"),
+    rarityDisplay = document.getElementById("display-rarity"),
+    typeEditor = document.getElementById("editor-type"),
+    materialEditor = document.getElementById("editor-material"),
+    statEditors = {
+        fortune: document.getElementById("editor-fortune"),
+        mining_speed: document.getElementById("editor-mining-speed"),
+        pickaxe_power: document.getElementById("editor-pickaxe-power"),
+        xp_yield: document.getElementById("editor-xp-yield")
+    },
+    statDisplays = {
+        fortune: [document.getElementById("display-fortune-text"), document.getElementById("display-fortune-amount")],
+        mining_speed: [document.getElementById("display-mining-speed-text"), document.getElementById("display-mining-speed-amount")],
+        pickaxe_power: [document.getElementById("display-pickaxe-power-text"), document.getElementById("display-pickaxe-power-amount")],
+        xp_yield: [document.getElementById("display-xp-yield-text"), document.getElementById("display-xp-yield-amount")]
+    },
+    finalBreak = document.getElementById("display-final-break");
 
-nameEditorObject.addEventListener("input", e => {
-    nameDisplayObject.textContent = nameEditorObject.value;
-})
+// Name update
+nameEditor.addEventListener("input", () => nameDisplay.textContent = nameEditor.value);
 
-let rarityDisplayObject = document.getElementById("display-rarity");
-let rarityEditorObject = document.getElementById("editor-rarity");
-let typeEditorObject = document.getElementById("editor-type");
+// Rarity colors
+const rarityColors = {
+    COMMON: "#FFFFFF", UNCOMMON: "#55FF55", RARE: "#5555FF",
+    EPIC: "#AA00AA", LEGENDARY: "#FFAA00", MYTHIC: "#FF55FF",
+    DIVINE: "#55FFFF", SPECIAL: "#FF5555"
+};
 
-rarityEditorObject.addEventListener("change", e => {
-    rarityDisplayObject.textContent = rarityEditorObject.value + " " + typeEditorObject.value;
-    switch (rarityEditorObject.value) {
-        case "COMMON":
-            nameDisplayObject.style.color = "#FFFFFF";
-            rarityDisplayObject.style.color = "#FFFFFF";
-            break;
-        case "UNCOMMON":
-            nameDisplayObject.style.color = "#55FF55";
-            rarityDisplayObject.style.color = "#55FF55";
-            break;
-        case "RARE":
-            nameDisplayObject.style.color = "#5555FF";
-            rarityDisplayObject.style.color = "#5555FF";
-            break;
-        case "EPIC":
-            nameDisplayObject.style.color = "#AA00AA";
-            rarityDisplayObject.style.color = "#AA00AA";
-            break;
-        case "LEGENDARY":
-            nameDisplayObject.style.color = "#FFAA00";
-            rarityDisplayObject.style.color = "#FFAA00";
-            break;
-        case "MYTHIC":
-            nameDisplayObject.style.color = "#FF55FF";
-            rarityDisplayObject.style.color = "#FF55FF";
-            break;
-        case "DIVINE":
-            nameDisplayObject.style.color = "#55FFFF";
-            rarityDisplayObject.style.color = "#55FFFF";
-            break;
-        case "SPECIAL":
-            nameDisplayObject.style.color = "#FF5555";
-            rarityDisplayObject.style.color = "#FF5555";
-            break;
-    }
-})
+function updateRarity() {
+    const color = rarityColors[rarityEditor.value] || "#FFFFFF";
+    nameDisplay.style.color = rarityDisplay.style.color = color;
+    rarityDisplay.textContent = `${rarityEditor.value} ${typeEditor.value}`;
+}
+rarityEditor.addEventListener("change", updateRarity);
+typeEditor.addEventListener("change", updateRarity);
 
-typeEditorObject.addEventListener("change", e => {
-    rarityDisplayObject.textContent = rarityEditorObject.value + " " + typeEditorObject.value;
-})
-
-let fortuneEditorObject = document.getElementById("editor-fortune");
-let miningSpeedEditorObject = document.getElementById("editor-mining-speed");
-let pickaxePowerEditorObject = document.getElementById("editor-pickaxe-power");
-let xpYieldEditorObject = document.getElementById("editor-xp-yield");
-
-let fortuneTextDisplayObject = document.getElementById("display-fortune-text");
-let fortuneAmountDisplayObject = document.getElementById("display-fortune-amount");
-let miningSpeedTextDisplayObject = document.getElementById("display-mining-speed-text");
-let miningSpeedAmountDisplayObject = document.getElementById("display-mining-speed-amount");
-let pickaxePowerTextDisplayObject = document.getElementById("display-pickaxe-power-text");
-let pickaxePowerAmountDisplayObject = document.getElementById("display-pickaxe-power-amount");
-let xpYieldTextDisplayObject = document.getElementById("display-xp-yield-text");
-let xpYieldAmountDisplayObject = document.getElementById("display-xp-yield-amount");
-
-fortuneEditorObject.addEventListener("change", e => {
-    if (fortuneEditorObject.value === "0" || fortuneEditorObject.value === "") {
-        fortuneTextDisplayObject.innerHTML = "";
-        fortuneAmountDisplayObject.innerHTML = "";
+// Stats update
+function updateStat(stat) {
+    const value = statEditors[stat].value;
+    const [textEl, amountEl] = statDisplays[stat];
+    if (!value || value === "0") {
+        textEl.textContent = amountEl.textContent = "";
     } else {
-        fortuneTextDisplayObject.innerHTML = "Fortune: ";
-        fortuneAmountDisplayObject.innerHTML = "+" + fortuneEditorObject.value + "<br>";
+        textEl.textContent = stat.replace("_", " ").replace(/\b\w/g, c => c.toUpperCase()) + ": ";
+        amountEl.innerHTML = "+" + value + "<br>";
     }
-});
+    // Add or remove final break
+    finalBreak.innerHTML = Object.values(statEditors).some(e => e.value && e.value !== "0") ? "<br>" : "";
+}
 
-miningSpeedEditorObject.addEventListener("change", e => {
-    if (miningSpeedEditorObject.value === "0" || miningSpeedEditorObject.value === "") {
-        miningSpeedTextDisplayObject.innerHTML = "";
-        miningSpeedAmountDisplayObject.innerHTML = "";
-    } else {
-        miningSpeedTextDisplayObject.innerHTML = "Mining Speed: ";
-        miningSpeedAmountDisplayObject.innerHTML = "+" + miningSpeedEditorObject.value + "<br>";
-    }
-})
+// Attach listeners
+for (let stat in statEditors) statEditors[stat].addEventListener("change", () => updateStat(stat));
 
-pickaxePowerEditorObject.addEventListener("change", e => {
-    if (pickaxePowerEditorObject.value === "0" || pickaxePowerEditorObject.value === "") {
-        pickaxePowerTextDisplayObject.innerHTML = "";
-        pickaxePowerAmountDisplayObject.innerHTML = "";
-    } else {
-        pickaxePowerTextDisplayObject.innerHTML = "Pickaxe Power: ";
-        pickaxePowerAmountDisplayObject.innerHTML = "+" + pickaxePowerEditorObject.value + "<br>";
-    }
-});
+// Export function
+function exportItem() {
+    const stats = {};
+    const lore = [""]; // Start with an empty first line
 
-xpYieldEditorObject.addEventListener("change", e => {
-    if (xpYieldEditorObject.value === "0" || xpYieldEditorObject.value === "") {
-        xpYieldTextDisplayObject.innerHTML = "";
-        xpYieldAmountDisplayObject.innerHTML = "";
-    } else {
-        xpYieldTextDisplayObject.innerHTML = "XP Yield: ";
-        xpYieldAmountDisplayObject.innerHTML = "+" + xpYieldEditorObject.value + "<br>";
-    }
+    // Mapping of stat names to display names and colors
+    const loreMap = {
+        fortune: { label: "Fortune", color: "<gold>" },
+        mining_speed: { label: "Mining Speed", color: "<gold>" },
+        pickaxe_power: { label: "Pickaxe Power", color: "<dark_purple>" },
+        xp_yield: { label: "XP Yield", color: "<aqua>" }
+    };
 
-    if (fortuneEditorObject.value === "0" || fortuneEditorObject.value === "") {
-        if (miningSpeedEditorObject.value === "0" || miningSpeedEditorObject.value === "") {
-            if (pickaxePowerEditorObject.value === "0" || pickaxePowerEditorObject.value === "") {
-                if (xpYieldEditorObject.value === "0" || xpYieldEditorObject.value === "") {
-                    document.getElementById("display-final-break").innerHTML = ""
-                } else {
-                    document.getElementById("display-final-break").innerHTML = "<br>"
-                }
-            } else {
-                document.getElementById("display-final-break").innerHTML = "<br>"
-            }
-        } else {
-            document.getElementById("display-final-break").innerHTML = "<br>"
+    for (let stat in statEditors) {
+        const val = Number(statEditors[stat].value);
+        if (val) {
+            stats[stat] = val;
+            const { label, color } = loreMap[stat];
+            lore.push(`<gray>${label}: ${color}+${val}`);
         }
-    } else {
-        document.getElementById("display-final-break").innerHTML = "<br>"
     }
 
+    return {
+        item_type: materialEditor.value,
+        stats,
+        name: nameEditor.value,
+        lore
+    };
+}
+
+document.getElementById("export-button").addEventListener("click", () => {
+    const item = exportItem();                    // Call the function
+    const json = JSON.stringify(item, null, 2);  // Convert to formatted JSON
+    navigator.clipboard.writeText(json)
+        .then(() => console.log("Copied to clipboard!"))
+        .catch(err => console.error("Failed to copy:", err));
 });
