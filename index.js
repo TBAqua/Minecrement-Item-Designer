@@ -109,12 +109,14 @@ function exportItem() {
     };
 }
 
-document.getElementById("import-button").addEventListener("click", async () => {
+document.getElementById("import-button").addEventListener("click", () => {
     try {
-        const text = await navigator.clipboard.readText();
+        const text = document.getElementById("import-input").value;
         const item = JSON.parse(text);
 
         nameEditor.value = item.name || "";
+        nameDisplay.textContent = nameEditor.value;
+
         materialEditor.value = item.item_type || "";
 
         for (let stat in statEditors) {
@@ -126,9 +128,40 @@ document.getElementById("import-button").addEventListener("click", async () => {
         typeEditor.value = item.type || "";
         updateRarity();
 
-        alert("✅ Item imported from clipboard!");
+        alert("✅ Item imported!");
     } catch (err) {
         console.error("Failed to import:", err);
-        alert("❌ Failed to import item. Make sure clipboard contains valid JSON.");
+        alert("❌ Invalid JSON.");
     }
 });
+
+const input = document.getElementById("import-input");
+
+function autoResize() {
+    // Reset size first
+    input.style.height = "auto";
+    input.style.width = "auto";
+
+    // Height = full content height
+    input.style.height = input.scrollHeight + "px";
+
+    // Width = longest line
+    const lines = input.value.split("\n");
+    const longestLine = lines.reduce((a, b) => a.length > b.length ? a : b, "");
+
+    // Create temporary span to measure exact width
+    const span = document.createElement("span");
+    span.style.visibility = "hidden";
+    span.style.whiteSpace = "pre";
+    span.style.font = getComputedStyle(input).font;
+    span.textContent = longestLine || " ";
+
+    document.body.appendChild(span);
+    input.style.width = span.offsetWidth + 20 + "px"; // padding buffer
+    document.body.removeChild(span);
+}
+
+input.addEventListener("input", autoResize);
+
+// Run once if pre-filled
+autoResize();
