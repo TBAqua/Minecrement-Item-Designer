@@ -1,4 +1,3 @@
-// Elements
 const nameEditor = document.getElementById("editor-name"),
     nameDisplay = document.getElementById("display-name"),
     rarityEditor = document.getElementById("editor-rarity"),
@@ -19,10 +18,8 @@ const nameEditor = document.getElementById("editor-name"),
     },
     finalBreak = document.getElementById("display-final-break");
 
-// Name update
 nameEditor.addEventListener("input", () => nameDisplay.textContent = nameEditor.value);
 
-// Rarity colors
 const rarityColors = {
     COMMON: "#FFFFFF", UNCOMMON: "#55FF55", RARE: "#5555FF",
     EPIC: "#AA00AA", LEGENDARY: "#FFAA00", MYTHIC: "#FF55FF",
@@ -37,7 +34,6 @@ function updateRarity() {
 rarityEditor.addEventListener("change", updateRarity);
 typeEditor.addEventListener("change", updateRarity);
 
-// Stats update
 function updateStat(stat) {
     const value = statEditors[stat].value;
     const [textEl, amountEl] = statDisplays[stat];
@@ -47,19 +43,27 @@ function updateStat(stat) {
         textEl.textContent = stat.replace("_", " ").replace(/\b\w/g, c => c.toUpperCase()) + ": ";
         amountEl.innerHTML = "+" + value + "<br>";
     }
-    // Add or remove final break
     finalBreak.innerHTML = Object.values(statEditors).some(e => e.value && e.value !== "0") ? "<br>" : "";
 }
 
-// Attach listeners
 for (let stat in statEditors) statEditors[stat].addEventListener("change", () => updateStat(stat));
 
-// Export function
+// MiniMessage color mapping
+const rarityMiniMessageColors = {
+    COMMON: "<white>",
+    UNCOMMON: "<green>",
+    RARE: "<blue>",
+    EPIC: "<dark_purple>",
+    LEGENDARY: "<gold>",
+    MYTHIC: "<light_purple>",
+    DIVINE: "<aqua>",
+    SPECIAL: "<red>"
+};
+
 function exportItem() {
     const stats = {};
     const lore = [""]; // Start with an empty first line
 
-    // Mapping of stat names to display names and colors
     const loreMap = {
         fortune: { label: "Fortune", color: "<gold>" },
         mining_speed: { label: "Mining Speed", color: "<gold>" },
@@ -67,6 +71,7 @@ function exportItem() {
         xp_yield: { label: "XP Yield", color: "<aqua>" }
     };
 
+    // Add stats first
     for (let stat in statEditors) {
         const val = Number(statEditors[stat].value);
         if (val) {
@@ -74,6 +79,17 @@ function exportItem() {
             const { label, color } = loreMap[stat];
             lore.push(`<gray>${label}: ${color}+${val}`);
         }
+    }
+
+    // Add a blank line before rarity + type
+    if (rarityEditor.value) lore.push("");
+
+    // Add rarity + type at the bottom
+    const rarityValue = rarityEditor.value;
+    const typeValue = typeEditor.value;
+    if (rarityValue) {
+        const colorTag = rarityMiniMessageColors[rarityValue] || "<white>";
+        lore.push(`${colorTag}${rarityValue} ${typeValue}`);
     }
 
     return {
@@ -84,10 +100,43 @@ function exportItem() {
     };
 }
 
-document.getElementById("export-button").addEventListener("click", () => {
-    const item = exportItem();                    // Call the function
-    const json = JSON.stringify(item, null, 2);  // Convert to formatted JSON
-    navigator.clipboard.writeText(json)
-        .then(() => console.log("Copied to clipboard!"))
-        .catch(err => console.error("Failed to copy:", err));
+document.getElementById("export-button").addEventListener("click", async () => {
+    try {
+        const item = exportItem();
+        const json = JSON.stringify(item, null, 2);
+        await navigator.clipboard.writeText(json);
+        alert("✅ Item copied to clipboard!");
+    } catch (err) {
+        console.error("Failed to copy:", err);
+        alert("❌ Failed to copy item. See console for details.");
+    }
+});
+
+document.getElementById("import-button").addEventListener("click", async () => {
+    try {
+        const text = await navigator.clipboard.readText();
+        const item = JSON.parse(text);
+
+        nameEditor.value = item.name || "";
+        materialEditor.value = item.item_type || "";
+
+        for (let stat in statEditors) {
+            statEditors[stat].value = item.stats?.[stat] || "";
+            updateStat(stat); // Refresh display
+        }
+
+        const rarityLine = item.lore?.filter(l => l.trim() !== "")?.pop() || "";
+        const match = rarityLine.match(/<\w+>(\w+)\s+(\w+)/);
+        if (match) {
+            const [, rarity, type] = match;
+            rarityEditor.value = rarity;
+            typeEditor.value = type;
+            updateRarity();
+        }
+
+        alert("✅ Item imported from clipboard!");
+    } catch (err) {
+        console.error("Failed to import:", err);
+        alert("❌ Failed to import item. Make sure clipboard contains valid JSON.");
+    }
 });
