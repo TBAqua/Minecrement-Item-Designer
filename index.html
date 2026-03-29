@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <div class="header-container">
+            <h1>Minecrement Item Designer</h1>
+        </div>
+        <div class="editor-container">
+            <div class="editor">
+                <div class="field">
+                    <label for="editor-name">Item Name: </label>
+                    <input id="editor-name" type="text" placeholder="Crude Pickaxe">
+                </div>
+                <div class="field">
+                    <label for="editor-material">Item Material: </label>
+                    <input id="editor-material" type="text" placeholder="WOODEN_PICKAXE">
+                </div>
+                <div class="field">
+                    <label for="editor-type">Item Type: </label>
+                    <select id="editor-type">
+                        <option value="PICKAXE">Pickaxe</option>
+                        <option value="ARMOR">Armor</option>
+                        <option value="TALISMAN">Talisman</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="editor-rarity">Choose an Item Rarity: </label>
+                    <select id="editor-rarity">
+                        <option value="COMMON">Common</option>
+                        <option value="UNCOMMON">Uncommon</option>
+                        <option value="RARE">Rare</option>
+                        <option value="EPIC">Epic</option>
+                        <option value="LEGENDARY">Legendary</option>
+                        <option value="MYTHIC">Mythic</option>
+                        <option value="DIVINE">Divine</option>
+                        <option value="SPECIAL">Special</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="editor-fortune">Choose a Fortune Amount: </label>
+                    <input id="editor-fortune" type="number" placeholder="10">
+                </div>
+                <div class="field">
+                    <label for="editor-mining-speed">Choose a Mining Speed Amount: </label>
+                    <input id="editor-mining-speed" type="number" placeholder="50">
+                </div>
+                <div class="field">
+                    <label for="editor-pickaxe-power">Choose a Pickaxe Power Amount: </label>
+                    <input id="editor-pickaxe-power" type="number" placeholder="1">
+                </div>
+                <div class="field">
+                    <label for="editor-xp-yield">Choose an XP Yield Amount: </label>
+                    <input id="editor-xp-yield" type="number" placeholder="5">
+                </div>
+            </div>
+            <div class="display-container">
+                <div class="display">
+                    <div class="field">
+                        <a id="display-name">Crude Pickaxe</a><br>
+                        <a><br></a>
+                        <a id="display-fortune-text" style="color: #AAAAAA">Fortune: </a><a id="display-fortune-amount" style="color: #FFAA00">+10<br></a>
+                        <a id="display-mining-speed-text" style="color: #AAAAAA">Mining Speed: </a><a id="display-mining-speed-amount" style="color: #FFAA00">+50<br></a>
+                        <a id="display-pickaxe-power-text" style="color: #AAAAAA">Pickaxe Power: </a><a id="display-pickaxe-power-amount" style="color: #AA00AA">+1<br></a>
+                        <a id="display-xp-yield-text" style="color: #AAAAAA">XP Yield: </a><a id="display-xp-yield-amount" style="color: #55FFFF">+10<br></a>
+                        <a id="display-final-break"><br></a>
+                        <a id="display-rarity">COMMON PICKAXE</a><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

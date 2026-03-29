@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap');
+
+@font-face {
+    font-family: 'Minecraft Regular';
+    src: url('fonts/minecraft/regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Minecraft Bold';
+    src: url('fonts/minecraft/bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Minecraft Italic';
+    src: url('fonts/minecraft/italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Minecraft Boldtalic';
+    src: url('fonts/minecraft/boldtalic.otf') format('opentype');
+}
+
+* {
+    font-family: "Minecraft Regular", serif;
+}
+
+body {
+    margin: 0;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("images/background.png") center / cover no-repeat;
+    filter: blur(7px);
+    transform: scale(1.1);
+    z-index: -1;
+}
+
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.header-container h1 {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px;
+    transition: 0.5s;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.header-container h1:hover {
+    rotate: -2deg;
+    scale: 1.05;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.editor-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: black;
+}
+
+.editor {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.editor:hover {
+    scale: 1.025;
+    rotate: -1deg;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.editor .field {
+    margin: 2px;
+    align-items: center;
+    display: flex;
+}
+
+.editor .field label {
+    width: 300px;
+    text-align: left;
+    margin-right: 10px;
+}
+
+.editor .field input, .editor .field select {
+    flex: 1;
+    max-width: 300px;
+    border-radius: 5px;
+}
+
+.display-container {
+    white-space: nowrap;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    max-width: 600px;
+    transition: 0.5s;
+    margin: 10px 10px 10px auto;
+}
+
+.display-container:hover {
+    scale: 1.025;
+    rotate: -1deg;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.display {
+    color: white;
+    padding: 2px 2px 2px 3px;
+    background-color: rgba(0, 0, 20, 0.90);
+    border-radius: 3px;
+}
+
+#display-rarity {
+    font-family: 'Minecraft Bold', serif;
+}
