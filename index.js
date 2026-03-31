@@ -97,7 +97,7 @@ function exportItem() {
     const rarityValue = rarityEditor.value || "COMMON";
     const typeValue = typeEditor.value || "";
     const colorTag = rarityMiniMessageColors[rarityValue] || "<white>";
-    lore.push(`${colorTag}${rarityValue} ${typeValue}`);
+    lore.push(`${colorTag}<bold>${rarityValue} ${typeValue}`);
 
     return {
         item_type: materialEditor.value,
